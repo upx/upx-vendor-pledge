@@ -233,7 +233,7 @@
  * @vforksafe
  */
 int pledge(const char *promises, const char *execpromises) {
-  int e, rc;
+  int rc;
   unsigned long ipromises, iexecpromises;
   if (!ParsePromises(promises, &ipromises) &&
       !ParsePromises(execpromises, &iexecpromises)) {

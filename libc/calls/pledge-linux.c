@@ -1036,6 +1036,7 @@ static void Log(const char *s, ...) {
   va_start(va, s);
   do ax = write(2, s, strlen(s));
   while ((s = va_arg(va, const char *)));
+  (void)ax; // unused
   va_end(va);
 }
 
@@ -1051,6 +1052,7 @@ static void KillThisThread(void) {
   sigaction(SIGABRT, &(struct sigaction){0}, 0);
   sigprocmask(SIG_SETMASK, &full, 0);
   ax = syscall(__NR_tkill, syscall(__NR_gettid), SIGABRT);
+  (void)ax; // unused
   sigprocmask(SIG_SETMASK, &empty, 0);
   syscall(__NR_exit, 128 + SIGABRT);
 }
@@ -1081,9 +1083,10 @@ static int HasSyscall(const struct Pledges *p, uint16_t n) {
 static void OnSigSys(int sig, siginfo_t *si, void *vctx) {
   bool found = false;
   char ord[17], ip[17];
-  int i, ok, mode = si->si_errno;
+  int i, mode = si->si_errno;
   ucontext_t *ctx = vctx;
 
+  (void)sig; // unused
   ctx->uc_mcontext.MCONTEXT_SYSCALL_RESULT_REGISTER = -EPERM;
   FixCpy(ord, si->si_syscall, 12);
   HexCpy(ip, ctx->uc_mcontext.MCONTEXT_INSTRUCTION_POINTER);
@@ -1112,7 +1115,6 @@ static void OnSigSys(int sig, siginfo_t *si, void *vctx) {
 }
 
 static void MonitorSigSys(void) {
-  int ax;
   struct sigaction sa = {
       .sa_sigaction = OnSigSys,
       .sa_flags = SA_SIGINFO | SA_RESTART,
@@ -2106,7 +2108,7 @@ static void AppendPledge(struct Filter *f,   //
  */
 int sys_pledge_linux(unsigned long ipromises, int mode) {
   struct Filter f;
-  int i, e, rc = -1;
+  int i, rc = -1;
   struct sock_filter sf[1] = {BPF_STMT(BPF_RET | BPF_K, 0)};
   CheckLargeStackAllocation(&f, sizeof(f));
   f.n = 0;
