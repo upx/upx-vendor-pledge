@@ -5,6 +5,13 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+#if !defined(__has_attribute)
+#define __has_attribute(x) 0
+#endif
+#if !defined(__has_builtin)
+#define __has_builtin(x) 0
+#endif
+
 #ifndef __STRICT_ANSI__
 #define pureconst __attribute__((__const__))
 #else

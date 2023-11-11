@@ -43,6 +43,10 @@
 #include "libc/runtime/runtime.h"
 #include "libc/runtime/stack.h"
 
+#if !defined(__O_TMPFILE) && defined(O_TMPFILE)
+#define __O_TMPFILE O_TMPFILE
+#endif
+
 /**
  * @fileoverview OpenBSD pledge() Polyfill Payload for GNU/Systemd
  *
