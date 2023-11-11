@@ -1079,7 +1079,7 @@ static int HasSyscall(const struct Pledges *p, uint16_t n) {
 }
 
 static void OnSigSys(int sig, siginfo_t *si, void *vctx) {
-  bool found;
+  bool found = false;
   char ord[17], ip[17];
   int i, ok, mode = si->si_errno;
   ucontext_t *ctx = vctx;
@@ -1087,7 +1087,7 @@ static void OnSigSys(int sig, siginfo_t *si, void *vctx) {
   ctx->uc_mcontext.MCONTEXT_SYSCALL_RESULT_REGISTER = -EPERM;
   FixCpy(ord, si->si_syscall, 12);
   HexCpy(ip, ctx->uc_mcontext.MCONTEXT_INSTRUCTION_POINTER);
-  for (found = i = 0; i < ARRAYLEN(kPledge); ++i) {
+  for (i = 0; i < ARRAYLEN(kPledge); ++i) {
     if (HasSyscall(kPledge + i, si->si_syscall)) {
       Log("error: pledge ", kPledge[i].name, " for ",
           GetSyscallName(si->si_syscall), " (ord=0x", ord, " ip=0x", ip, ")\n",
