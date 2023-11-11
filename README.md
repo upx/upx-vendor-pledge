@@ -45,7 +45,7 @@ benefit from it. But if you've got OpenBSD privilege, then doing the
 same thing becomes easy:
 
 ```c
-pledge("stdio rpath", 0);
+pledge("stdio rpath", NULL);
 ```
 
 That's really all OpenBSD users have to do to prevent things like leaks
