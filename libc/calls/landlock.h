@@ -5,6 +5,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Allow renaming or linking file to a different directory.
  *
@@ -31,5 +35,9 @@ int landlock_restrict_self(int, uint32_t);
 int landlock_add_rule(int, enum landlock_rule_type, const void *, uint32_t);
 int landlock_create_ruleset(const struct landlock_ruleset_attr *, size_t,
                             uint32_t);
+
+#ifdef __cplusplus
+} /* extern "C" */
+#endif
 
 #endif
