@@ -249,7 +249,7 @@ int pledge(const char *promises, const char *execpromises) {
       rc = sys_pledge_linux(ipromises, __pledge_mode);
       if (rc > -4096u) errno = -rc, rc = -1;
     }
-    if (!rc && (getpid() == gettid())) {
+    if (!rc && (getpid() == sys_gettid())) {
       __promises = ipromises;
       __execpromises = iexecpromises;
     }

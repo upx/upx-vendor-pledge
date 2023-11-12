@@ -5,6 +5,7 @@
 #include "libc/intrin/promises.internal.h"
 #include <stdint.h>
 #include <stddef.h>
+#include <sys/types.h> /* pid_t */
 
 struct Pledges {
   const char *name;
@@ -14,6 +15,7 @@ struct Pledges {
 
 extern const struct Pledges kPledge[PROMISE_LEN_];
 
+pid_t sys_gettid(void); /* needed for older musl versions */
 int sys_pledge_linux(unsigned long, int);
 int ParsePromises(const char *, unsigned long *);
 

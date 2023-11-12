@@ -84,16 +84,22 @@
 #define bsr(x)         (__builtin_clzll(x) ^ 63)
 
 #ifdef __x86_64__
+#include "libc/compat/musl-headers/syscall-linux/x86_64/syscall.h"
 #define MCONTEXT_SYSCALL_RESULT_REGISTER gregs[REG_RAX]
 #define MCONTEXT_INSTRUCTION_POINTER     gregs[REG_RIP]
 #define ARCHITECTURE                     AUDIT_ARCH_X86_64
 #elif defined(__aarch64__)
+#include "libc/compat/musl-headers/syscall-linux/aarch64/syscall.h"
 #define MCONTEXT_SYSCALL_RESULT_REGISTER regs[0]
 #define MCONTEXT_INSTRUCTION_POINTER     pc
 #define ARCHITECTURE                     AUDIT_ARCH_AARCH64
 #else
 #error "unsupported architecture"
 #endif
+
+pid_t sys_gettid(void) { /* needed for older musl versions */
+  return syscall(__NR_gettid);
+}
 
 struct Filter {
   size_t n;
@@ -1197,7 +1203,7 @@ static void AllowMonitor(struct Filter *f) {
       BPF_STMT(BPF_LD | BPF_W | BPF_ABS, OFF(nr)),
       BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, __NR_tkill, 0, 6),
       BPF_STMT(BPF_LD | BPF_W | BPF_ABS, OFF(args[0])),
-      BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, gettid(), 0, 3),
+      BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, sys_gettid(), 0, 3),
       BPF_STMT(BPF_LD | BPF_W | BPF_ABS, OFF(args[1])),
       BPF_JUMP(BPF_JMP | BPF_JEQ | BPF_K, SIGABRT, 0, 1),
       BPF_STMT(BPF_RET | BPF_K, SECCOMP_RET_ALLOW),

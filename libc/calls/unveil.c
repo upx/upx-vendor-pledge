@@ -16,6 +16,7 @@
 │ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR             │
 │ PERFORMANCE OF THIS SOFTWARE.                                                │
 ╚─────────────────────────────────────────────────────────────────────────────*/
+#if HAVE_LANDLOCK /* FIXME: work-around for older glibc/musl */
 /*
 #include "libc/assert.h"
 */
@@ -443,3 +444,4 @@ int unveil(const char *path, const char *permissions) {
   // STRACE("unveil(%#s, %#s) → %d% m", path, permissions, rc);
   return rc;
 }
+#endif /* HAVE_LANDLOCK */

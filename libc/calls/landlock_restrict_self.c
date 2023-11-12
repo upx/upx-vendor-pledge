@@ -16,6 +16,7 @@
 │ TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR             │
 │ PERFORMANCE OF THIS SOFTWARE.                                                │
 ╚─────────────────────────────────────────────────────────────────────────────*/
+#if HAVE_LANDLOCK /* FIXME: work-around for older glibc/musl */
 #include "libc/calls/landlock.h"
 /*
 #include "libc/intrin/strace.internal.h"
@@ -45,3 +46,4 @@ int landlock_restrict_self(int fd, uint32_t flags) {
   //KERNTRACE("landlock_create_ruleset(%d, %#x) → %d% m", fd, flags, rc);
   return rc;
 }
+#endif /* HAVE_LANDLOCK */
