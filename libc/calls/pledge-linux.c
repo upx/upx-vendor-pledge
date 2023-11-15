@@ -43,6 +43,11 @@
 #include "libc/runtime/runtime.h"
 #include "libc/runtime/stack.h"
 
+/* silence a bogus clang warning */
+#if defined(__clang__) && (__clang_major__ >= 14) && (__clang_major__ < 17)
+#pragma clang diagnostic ignored "-Wconstant-logical-operand"
+#endif
+
 #if !defined(__O_TMPFILE) && defined(O_TMPFILE)
 #define __O_TMPFILE O_TMPFILE
 #endif
